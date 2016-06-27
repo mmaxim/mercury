@@ -1,0 +1,47 @@
+
+* Goal
+
+Recreate OkC pubsub system in Go and geared toward a containerized deployment.
+
+* Setup
+
+Many writers
+Many readers
+
+Writers send messages to each other
+Register in a database and heartbeat in Gregor style
+Readers pick writers from the database
+Periodically drop connection and move to another writer
+If a new writer appears, all readers drop and reconnect
+
+* IDs
+
+[ <4 bytes of timestamp> <8 bytes of random ID> <4 bytes of sequence #> ]
+
+* timestamp provides a high level ordering, subject to difference in clocks
+* random ID allows for dedup on client (readers might also need to dedup on writer switches)
+* sequnce # is a bandwidth opt for clients requestingA
+
+* Receipts
+
+messages can come with receipt requests
+if a client doesn't provide one in a time limit, message resent
+
+* Layout
+
+- bin
+ - mercurywd
+ - mercuryrd
+- config
+- server
+ - writer
+ - reader
+- util
+
+* Containers
+
+One for reader
+One for writer
+One for coordination DB
+
+
